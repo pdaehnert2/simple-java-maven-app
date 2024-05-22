@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    parameters {
+        booleanParam(defaultValue: false, description: "Enable Delivery?", name: "enable_delivery")
+    }
     stages {
         stage('Build') {
             steps {
@@ -17,6 +20,11 @@ pipeline {
             }
         }
         stage('Deliver') {
+            when {
+                expression {
+                    return params.enable_delivery
+                }
+            }
             steps {
                 sh './jenkins/scripts/deliver.sh'
             }
